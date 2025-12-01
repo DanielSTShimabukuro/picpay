@@ -3,7 +3,7 @@ package picpay.picpay.services;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import picpay.picpay.dtos.user.RegisterRequestDTO;
+import picpay.picpay.dtos.user.UserRequestDTO;
 import picpay.picpay.repositories.UserRepository;
 
 @Service
@@ -14,7 +14,7 @@ public class UserValidationService {
         this.repository = repository;
     }
 
-    public void validateRegister(RegisterRequestDTO request) {
+    public void validateRegister(UserRequestDTO request) {
         if (this.repository.existsByCpf(request.cpf())) {
             throw new DataIntegrityViolationException("Cpf is already used");
         }

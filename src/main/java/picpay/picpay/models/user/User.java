@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import picpay.picpay.dtos.user.RegisterRequestDTO;
+import picpay.picpay.dtos.user.UserRequestDTO;
 
 @Entity(name = "users")
 @Table(name = "users")
@@ -64,7 +64,7 @@ public class User {
   @Enumerated(EnumType.STRING)
   private UserType type;
 
-  public User(RegisterRequestDTO data) {
+  public User(UserRequestDTO data) {
     this.cpf = data.cpf();
     this.email = data.email();
     this.firstName = data.firstName();
