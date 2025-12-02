@@ -1,4 +1,4 @@
-package picpay.picpay.services;
+package picpay.picpay.services.users;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

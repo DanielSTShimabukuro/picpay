@@ -1,4 +1,4 @@
-package picpay.picpay.services;
+package picpay.picpay.services.users;
 
 import java.util.List;
 
@@ -32,7 +32,10 @@ public class UserService {
     return new UserResponseDTO(user);
   }
 
-  public List<User> getAllUsers() {
-    return this.repository.findAll();
+  public List<UserResponseDTO> getAllUsers() {
+    return this.repository.findAll()
+                          .stream()
+                          .map(UserResponseDTO::new)
+                          .toList();
   }
 }
