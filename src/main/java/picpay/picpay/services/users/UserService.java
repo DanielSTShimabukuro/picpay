@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import picpay.picpay.dtos.user.UserRequestDTO;
 import picpay.picpay.dtos.user.UserResponseDTO;
@@ -37,5 +38,11 @@ public class UserService {
                           .stream()
                           .map(UserResponseDTO::new)
                           .toList();
+  }
+
+  public UserResponseDTO getUserById(String id) {
+    User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+    return new UserResponseDTO(user);
   }
 }
