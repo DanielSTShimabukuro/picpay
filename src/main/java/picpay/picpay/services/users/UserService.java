@@ -45,4 +45,10 @@ public class UserService {
 
     return new UserResponseDTO(user);
   }
+
+  public void deleteUserById(String id) {
+    User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+    this.repository.delete(user);
+  }
 }
