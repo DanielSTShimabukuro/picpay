@@ -2,6 +2,7 @@ package picpay.picpay.services.users;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -42,6 +43,17 @@ public class UserService {
 
   public UserResponseDTO getUserById(String id) {
     User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+    return new UserResponseDTO(user);
+  }
+
+  public UserResponseDTO updateUserById(UserRequestDTO request, String id) {
+    User newUser = new User(request);
+    User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+    BeanUtils.copyProperties(newUser, user);
+
+    this.repository.save(user);
 
     return new UserResponseDTO(user);
   }
