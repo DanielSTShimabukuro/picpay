@@ -35,20 +35,20 @@ public class UserService {
 
     this.repository.save(user);
 
-    return new UserResponseDTO(user);
+    return this.mapper.toResponse(user);
   }
 
   public List<UserResponseDTO> getAllUsers() {
     return this.repository.findAll()
                           .stream()
-                          .map(UserResponseDTO::new)
+                          .map(this.mapper::toResponse)
                           .toList();
   }
 
   public UserResponseDTO getUserById(String id) {
     User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
 
-    return new UserResponseDTO(user);
+    return this.mapper.toResponse(user);
   }
 
   public UserResponseDTO updateUserById(UserRequestDTO request, String id) {
@@ -59,7 +59,7 @@ public class UserService {
 
     this.repository.save(user);
 
-    return new UserResponseDTO(user);
+    return this.mapper.toResponse(user);
   }
 
   public String deleteUserById(String id) {
