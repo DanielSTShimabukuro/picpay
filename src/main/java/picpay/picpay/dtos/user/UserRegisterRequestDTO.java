@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import picpay.picpay.models.user.UserType;
 
-public record UserRequestDTO(
+public record UserRegisterRequestDTO(
     String cpf, 
     String email, 
     String firstName, 

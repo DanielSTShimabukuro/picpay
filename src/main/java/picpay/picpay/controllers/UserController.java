@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import picpay.picpay.dtos.user.UserRequestDTO;
+import picpay.picpay.dtos.user.UserRegisterRequestDTO;
 import picpay.picpay.dtos.user.UserResponseDTO;
 import picpay.picpay.services.users.UserService;
 
@@ -28,7 +28,7 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRequestDTO request) {
+  public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRegisterRequestDTO request) {
     UserResponseDTO response = this.service.registerUser(request);
 
     return new ResponseEntity<>(response, HttpStatus.CREATED);

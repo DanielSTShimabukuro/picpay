@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import picpay.picpay.dtos.user.UserRequestDTO;
+import picpay.picpay.dtos.user.UserRegisterRequestDTO;
 import picpay.picpay.dtos.user.UserResponseDTO;
 import picpay.picpay.mapper.UserMapper;
 import picpay.picpay.models.user.User;
@@ -28,7 +28,7 @@ public class UserService {
   }
 
   @Transactional
-  public UserResponseDTO registerUser(UserRequestDTO request) {
+  public UserResponseDTO registerUser(UserRegisterRequestDTO request) {
     this.validationService.validateRegister(request);
 
     User user = this.mapper.toEntity(request);
@@ -51,7 +51,7 @@ public class UserService {
     return this.mapper.toResponse(user);
   }
 
-  public UserResponseDTO updateUserById(UserRequestDTO request, String id) {
+  public UserResponseDTO updateUserById(UserRegisterRequestDTO request, String id) {
     User newUser = this.mapper.toEntity(request);
     User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
 
