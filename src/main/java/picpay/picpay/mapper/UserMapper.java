@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import picpay.picpay.dtos.user.UserRegisterRequestDTO;
 import picpay.picpay.dtos.user.UserResponseDTO;
+import picpay.picpay.dtos.user.UserUpdateRequestDTO;
 import picpay.picpay.models.user.User;
 
 @Component
@@ -18,6 +19,18 @@ public class UserMapper {
     user.setPassword(request.password());
     user.setBalance(request.balance());
     user.setType(request.type());
+
+    return user;
+  }
+
+  public User updateEntity(User user, UserUpdateRequestDTO request) {
+    if (request.email() != null) {
+      user.setEmail(request.email());
+    }
+
+    if (request.password() != null) {
+      user.setPassword(request.password());
+    }
 
     return user;
   }
