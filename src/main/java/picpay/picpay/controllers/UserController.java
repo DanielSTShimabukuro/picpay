@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import picpay.picpay.dtos.user.UserRegisterRequestDTO;
 import picpay.picpay.dtos.user.UserResponseDTO;
+import picpay.picpay.dtos.user.UserUpdateRequestDTO;
 import picpay.picpay.services.users.UserService;
 
 
@@ -45,6 +47,14 @@ public class UserController {
   @GetMapping("{id}")
   public ResponseEntity<UserResponseDTO> getUserById(@Valid @PathVariable String id) {
     UserResponseDTO response = this.service.getUserById(id);
+
+    return new ResponseEntity<>(response, HttpStatus.OK);
+  }
+
+  @PatchMapping("{id}")
+  public ResponseEntity<UserResponseDTO> updateUserById(@Valid @PathVariable String id, 
+                                                        @RequestBody UserUpdateRequestDTO request) {
+    UserResponseDTO response = this.service.updateUserById(request, id);
 
     return new ResponseEntity<>(response, HttpStatus.OK);
   }

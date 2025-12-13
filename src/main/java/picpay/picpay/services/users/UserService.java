@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import picpay.picpay.dtos.user.UserRegisterRequestDTO;
 import picpay.picpay.dtos.user.UserResponseDTO;
+import picpay.picpay.dtos.user.UserUpdateRequestDTO;
 import picpay.picpay.mapper.UserMapper;
 import picpay.picpay.models.user.User;
 import picpay.picpay.repositories.UserRepository;
@@ -51,12 +52,10 @@ public class UserService {
     return this.mapper.toResponse(user);
   }
 
-  public UserResponseDTO updateUserById(UserRegisterRequestDTO request, String id) {
-    User newUser = this.mapper.toEntity(request);
+  public UserResponseDTO updateUserById(UserUpdateRequestDTO request, String id) {
     User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
 
-    BeanUtils.copyProperties(newUser, user);
-
+    user = this.mapper.updateEntity(request, user);
     this.repository.save(user);
 
     return this.mapper.toResponse(user);

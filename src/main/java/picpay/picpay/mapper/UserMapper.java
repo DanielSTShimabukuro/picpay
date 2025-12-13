@@ -23,7 +23,7 @@ public class UserMapper {
     return user;
   }
 
-  public User updateEntity(User user, UserUpdateRequestDTO request) {
+  public User updateEntity(UserUpdateRequestDTO request, User user) {
     if (request.email() != null) {
       user.setEmail(request.email());
     }
