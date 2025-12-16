@@ -2,7 +2,6 @@ package picpay.picpay.services.users;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
