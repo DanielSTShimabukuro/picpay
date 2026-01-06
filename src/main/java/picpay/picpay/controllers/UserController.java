@@ -53,7 +53,7 @@ public class UserController {
 
   @PatchMapping("{id}")
   public ResponseEntity<UserResponseDTO> updateUserById(@Valid @PathVariable String id, 
-                                                        @RequestBody UserUpdateRequestDTO request) {
+                                                        @Valid @RequestBody UserUpdateRequestDTO request) {
     UserResponseDTO response = this.service.updateUserById(request, id);
 
     return new ResponseEntity<>(response, HttpStatus.OK);
