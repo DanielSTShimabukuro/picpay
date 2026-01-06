@@ -51,6 +51,7 @@ public class UserService {
     return this.mapper.toResponse(user);
   }
 
+  @Transactional
   public UserResponseDTO updateUserById(UserUpdateRequestDTO request, String id) {
     User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
 
@@ -60,6 +61,7 @@ public class UserService {
     return this.mapper.toResponse(user);
   }
 
+  @Transactional
   public String deleteUserById(String id) {
     User user = this.repository.findUserById(id).orElseThrow(() -> new EntityNotFoundException("User not found."));
 
