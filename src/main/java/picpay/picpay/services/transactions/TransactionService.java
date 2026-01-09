@@ -1,5 +1,7 @@
 package picpay.picpay.services.transactions;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -29,8 +31,8 @@ public class TransactionService {
 
   @Transactional
   public TransactionResponseDTO createTransaction(String senderId, String receiverId, TransactionRequestDTO request) {
-    User sender = this.userRepository.findUserById(senderId).orElseThrow(() -> new EntityNotFoundException("User not found."));;
-    User receiver = this.userRepository.findUserById(receiverId).orElseThrow(() -> new EntityNotFoundException("User not found."));;
+    User sender = this.userRepository.findById(senderId).orElseThrow(() -> new EntityNotFoundException("User not found."));;
+    User receiver = this.userRepository.findById(receiverId).orElseThrow(() -> new EntityNotFoundException("User not found."));;
 
     Transaction transaction = this.mapper.toEntity(request);
 
@@ -40,5 +42,12 @@ public class TransactionService {
     this.repository.save(transaction);
 
     return this.mapper.toResponse(transaction);
+  }
+
+  public List<TransactionResponseDTO> getAllTransactions() {
+    return this.repository.findAll()
+                          .stream()
+                          .map(this.mapper::toResponse)
+                          .toList();
   }
 }

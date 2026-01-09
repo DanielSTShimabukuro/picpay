@@ -33,36 +33,36 @@ public class UserController {
   public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRegisterRequestDTO request) {
     UserResponseDTO response = this.service.registerUser(request);
 
-    return new ResponseEntity<>(response, HttpStatus.CREATED);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @GetMapping
   public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
     List<UserResponseDTO> response = this.service.getAllUsers();
 
-    return new ResponseEntity<>(response, HttpStatus.OK);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
   
 
   @GetMapping("{id}")
-  public ResponseEntity<UserResponseDTO> getUserById(@Valid @PathVariable String id) {
+  public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
     UserResponseDTO response = this.service.getUserById(id);
 
-    return new ResponseEntity<>(response, HttpStatus.OK);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @PatchMapping("{id}")
-  public ResponseEntity<UserResponseDTO> updateUserById(@Valid @PathVariable String id, 
+  public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable String id, 
                                                         @Valid @RequestBody UserUpdateRequestDTO request) {
     UserResponseDTO response = this.service.updateUserById(request, id);
 
-    return new ResponseEntity<>(response, HttpStatus.OK);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<String> deleteUserById(@Valid @PathVariable String id) {
-    String response = this.service.deleteUserById(id);
+  public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
+    this.service.deleteUserById(id);
 
-    return new ResponseEntity<>(response, HttpStatus.OK);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
   }
 }

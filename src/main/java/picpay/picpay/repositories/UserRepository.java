@@ -11,7 +11,7 @@ import picpay.picpay.models.user.User;
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findUserByCpf(String cpf);
     Optional<User> findUserByEmail(String email);
-    Optional<User> findUserById(String id);
     boolean existsByCpf(String cpf);
     boolean existsByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, String id);
 }
