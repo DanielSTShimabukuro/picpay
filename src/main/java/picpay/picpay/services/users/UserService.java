@@ -19,7 +19,8 @@ public class UserService {
   private final UserRepository repository;
   private final UserValidationService validationService;
 
-  public UserService(UserMapper mapper,
+  public UserService(
+    UserMapper mapper,
     UserRepository repository,
     UserValidationService validationService){
       this.mapper = mapper;

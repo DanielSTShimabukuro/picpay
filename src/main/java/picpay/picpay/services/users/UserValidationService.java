@@ -1,6 +1,5 @@
 package picpay.picpay.services.users;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import picpay.picpay.dtos.user.UserRegisterRequestDTO;
@@ -12,7 +11,8 @@ import picpay.picpay.repositories.UserRepository;
 public class UserValidationService {
     private final UserRepository repository;
 
-    public UserValidationService(UserRepository repository) {
+    public UserValidationService(
+        UserRepository repository) {
         this.repository = repository;
     }
 
@@ -27,7 +27,7 @@ public class UserValidationService {
     }
 
     public void validateUpdate(UserUpdateRequestDTO request, String id) {
-        if (this.repository.existsByEmailAndIdNot(request.email(), id)) {
+        if (request.email() != null && this.repository.existsByEmailAndIdNot(request.email(), id)) {
             throw new BusinessException("Email is already used.");
         }
     }

@@ -30,7 +30,8 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRegisterRequestDTO request) {
+  public ResponseEntity<UserResponseDTO> registerUser(
+    @Valid @RequestBody UserRegisterRequestDTO request) {
     UserResponseDTO response = this.service.registerUser(request);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -45,22 +46,25 @@ public class UserController {
   
 
   @GetMapping("{id}")
-  public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
+  public ResponseEntity<UserResponseDTO> getUserById(
+    @PathVariable String id) {
     UserResponseDTO response = this.service.getUserById(id);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @PatchMapping("{id}")
-  public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable String id, 
-                                                        @Valid @RequestBody UserUpdateRequestDTO request) {
+  public ResponseEntity<UserResponseDTO> updateUserById(
+    @PathVariable String id, 
+    @Valid @RequestBody UserUpdateRequestDTO request) {
     UserResponseDTO response = this.service.updateUserById(request, id);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
+  public ResponseEntity<Void> deleteUserById(
+    @PathVariable String id) {
     this.service.deleteUserById(id);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
