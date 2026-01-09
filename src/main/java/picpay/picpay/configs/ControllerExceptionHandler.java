@@ -5,15 +5,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import picpay.picpay.dtos.exception.ExceptionDTO;
+import jakarta.persistence.EntityNotFoundException;
+import picpay.picpay.dtos.exception.ExceptionResponseDTO;
 import picpay.picpay.exceptions.BusinessException;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
   @ExceptionHandler(BusinessException.class)
-  public ResponseEntity<ExceptionDTO> handleBusinessException(BusinessException ex) {
-    ExceptionDTO exceptionDTO = new ExceptionDTO(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+  public ResponseEntity<ExceptionResponseDTO> handleBusinessException(BusinessException ex) {
+    ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
 
-    return ResponseEntity.badRequest().body(exceptionDTO);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<ExceptionResponseDTO> handleEntityNotFoundException(EntityNotFoundException ex) {
+    ExceptionResponseDTO response = new ExceptionResponseDTO(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
 }
