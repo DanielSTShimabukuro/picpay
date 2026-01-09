@@ -12,7 +12,7 @@ public class UserValidationService {
     private final UserRepository repository;
 
     public UserValidationService(
-        UserRepository repository) {
+            UserRepository repository) {
         this.repository = repository;
     }
 
