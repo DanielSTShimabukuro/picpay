@@ -1,4 +1,4 @@
-package picpay.picpay.mapper;
+package picpay.picpay.mappers;
 
 import org.springframework.stereotype.Component;
 

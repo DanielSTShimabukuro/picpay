@@ -9,7 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import picpay.picpay.dtos.user.UserRegisterRequestDTO;
 import picpay.picpay.dtos.user.UserResponseDTO;
 import picpay.picpay.dtos.user.UserUpdateRequestDTO;
-import picpay.picpay.mapper.UserMapper;
+import picpay.picpay.mappers.UserMapper;
 import picpay.picpay.models.user.User;
 import picpay.picpay.repositories.UserRepository;
 

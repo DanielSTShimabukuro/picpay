@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import picpay.picpay.dtos.transactions.TransactionRequestDTO;
 import picpay.picpay.dtos.transactions.TransactionResponseDTO;
-import picpay.picpay.mapper.TransactionMapper;
+import picpay.picpay.mappers.TransactionMapper;
 import picpay.picpay.models.transactions.Transaction;
 import picpay.picpay.models.user.User;
 import picpay.picpay.repositories.TransactionRepository;

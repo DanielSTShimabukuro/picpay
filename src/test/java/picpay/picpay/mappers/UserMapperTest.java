@@ -1,40 +1,25 @@
-package picpay.picpay.services;
+package picpay.picpay.mappers;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import picpay.picpay.dtos.user.UserRegisterRequestDTO;
-import picpay.picpay.mappers.UserMapper;
 import picpay.picpay.models.user.User;
 import picpay.picpay.models.user.UserType;
-import picpay.picpay.repositories.UserRepository;
-import picpay.picpay.services.users.UserService;
-import picpay.picpay.services.users.UserValidationService;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
-  @Mock
+public class UserMapperTest {
+  @InjectMocks
   private UserMapper mapper;
 
-  @Mock
-  private UserRepository repository;
-
-  @Mock
-  private UserValidationService validationService;
-
-  @InjectMocks
-  private UserService service;
-
   @Test
-  void shouldRegisterUserSuccessfully() throws Exception {
+  void shouldToEntitySuccefully() {
     UserRegisterRequestDTO request = new UserRegisterRequestDTO("881.302.780-06", 
                                                                 "daniel.s.t.shimabukuro@gmail.com", 
                                                                 "Daniel", 
@@ -43,15 +28,14 @@ public class UserServiceTest {
                                                                 BigDecimal.valueOf(1000), 
                                                                 UserType.COMMON);
 
-    User user = new User();
+    User user = this.mapper.toEntity(request);
 
-    when(this.mapper.toEntity(request)).thenReturn(user);
-    
-    this.service.registerUser(request);
-
-    verify(this.mapper).toEntity(request);
-    verify(this.validationService).validateRegister(request);
-    verify(this.repository).save(user);
-    verify(this.mapper).toResponse(user);
+    assertEquals(request.cpf(), user.getCpf());
+    assertEquals(request.email(), user.getEmail());
+    assertEquals(request.firstName(), user.getFirstName());
+    assertEquals(request.lastName(), user.getLastName());
+    assertEquals(request.password(), user.getPassword());
+    assertEquals(request.balance(), user.getBalance());
+    assertEquals(request.type(), user.getType());
   }
 }
