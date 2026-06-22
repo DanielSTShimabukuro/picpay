@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,6 +27,19 @@ public class ControllerExceptionHandler {
 
     return ResponseEntity.status(status).body(response);
   }
+  
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<ExceptionResponseDTO> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+
+    ExceptionResponseDTO response = new ExceptionResponseDTO(
+      status.value(),
+    List.of(ex.getMessage()),
+      LocalDateTime.now());
+
+    return ResponseEntity.status(status).body(response);
+  }
+
 
   @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<ExceptionResponseDTO> handleEntityNotFoundException(EntityNotFoundException ex) {
