@@ -3,6 +3,7 @@ package picpay.picpay.configs;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -44,6 +45,18 @@ public class ControllerExceptionHandler {
   @ExceptionHandler(EntityNotFoundException.class)
   public ResponseEntity<ExceptionResponseDTO> handleEntityNotFoundException(EntityNotFoundException ex) {
     HttpStatus status = HttpStatus.NOT_FOUND;
+
+    ExceptionResponseDTO response = new ExceptionResponseDTO(
+      status.value(),
+      List.of(ex.getMessage()),
+      LocalDateTime.now());
+
+    return ResponseEntity.status(status).body(response);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ExceptionResponseDTO> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+    HttpStatus status = HttpStatus.CONFLICT;
 
     ExceptionResponseDTO response = new ExceptionResponseDTO(
       status.value(),
