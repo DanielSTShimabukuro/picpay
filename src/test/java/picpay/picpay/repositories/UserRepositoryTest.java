@@ -4,13 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
-import jakarta.persistence.EntityManager;
 import picpay.picpay.models.user.User;
 import picpay.picpay.models.user.UserType;
 
@@ -19,47 +18,41 @@ import picpay.picpay.models.user.UserType;
 public class UserRepositoryTest {
   @Autowired
   private UserRepository repository;
-
-  @Autowired
-  private EntityManager entityManager;
-
+  
   @Test
   void shouldNotAllowDuplicateCPFInDatabase() {
-    User user1 = newUser("881.302.780-06", 
-                          "daniel.s.t.shimabukuro@gmail.com", 
-                          "Daniel", 
-                          "Shimabukuro", 
-                          "senha", 
-                          BigDecimal.valueOf(1000), 
-                          UserType.COMMON);
+    User user1 = buildUser("881.302.780-06", "daniel.s.t.shimabukuro@gmail.com");
+    User user2 = buildUser("881.302.780-06", "danielsatoshi.shimabukuro@gmail.com");
 
-    User user2 = newUser("881.302.780-06", 
-                          "danielsatoshi.shimabukuro@gmail.com", 
-                          "Daniel", 
-                          "Shimabukuro", 
-                          "senha", 
-                          BigDecimal.valueOf(1000), 
-                          UserType.COMMON);
+    this.repository.saveAndFlush(user1);
 
-    this.entityManager.persist(user1);
-    this.entityManager.flush();
-
-    assertThrows(ConstraintViolationException.class, () -> {
-      this.entityManager.persist(user2);
-      this.entityManager.flush();
+    assertThrows(DataIntegrityViolationException.class, () -> {
+      this.repository.saveAndFlush(user2);
     });
   }
 
-  private User newUser(String cpf, String email, String firstName, String lastName, String password, BigDecimal balance, UserType type) {
+  @Test
+  void shouldNotAllowDuplicateEmailInDatabase() {
+    User user1 = buildUser("881.302.780-06", "daniel.s.t.shimabukuro@gmail.com");
+    User user2 = buildUser("048.556.150-64", "daniel.s.t.shimabukuro@gmail.com");
+
+    this.repository.saveAndFlush(user1);
+
+    assertThrows(DataIntegrityViolationException.class, () -> {
+      this.repository.saveAndFlush(user2);
+    });
+  }
+
+  private User buildUser(String cpf, String email) {
     User user = new User();
 
     user.setCpf(cpf);
     user.setEmail(email);
-    user.setFirstName(firstName);
-    user.setLastName(lastName);
-    user.setPassword(password);
-    user.setBalance(balance);
-    user.setType(type);
+    user.setFirstName("Daniel");
+    user.setLastName("Shimabukuro");
+    user.setPassword("senha");
+    user.setBalance(BigDecimal.valueOf(1000));
+    user.setType(UserType.COMMON);
 
     return user;
   }
