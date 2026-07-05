@@ -26,9 +26,7 @@ public class UserRepositoryTest {
 
     this.repository.saveAndFlush(user1);
 
-    assertThrows(DataIntegrityViolationException.class, () -> {
-      this.repository.saveAndFlush(user2);
-    });
+    assertThrows(DataIntegrityViolationException.class, () -> this.repository.saveAndFlush(user2));
   }
 
   @Test
@@ -38,9 +36,14 @@ public class UserRepositoryTest {
 
     this.repository.saveAndFlush(user1);
 
-    assertThrows(DataIntegrityViolationException.class, () -> {
-      this.repository.saveAndFlush(user2);
-    });
+    assertThrows(DataIntegrityViolationException.class, () -> this.repository.saveAndFlush(user2));
+  }
+
+  @Test
+  void shouldNotAllowNullCpfInDatabase() {
+    User user = buildUser(null, "daniel.s.t.shimabukuro@gmail.com");
+
+    assertThrows(DataIntegrityViolationException.class, () -> this.repository.saveAndFlush(user));
   }
 
   private User buildUser(String cpf, String email) {
