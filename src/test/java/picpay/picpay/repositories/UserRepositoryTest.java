@@ -46,6 +46,13 @@ public class UserRepositoryTest {
     assertThrows(DataIntegrityViolationException.class, () -> this.repository.saveAndFlush(user));
   }
 
+  @Test
+  void shouldNotAllowNullEmailInDatabase() {
+    User user = buildUser("881.302.780-06", null);
+
+    assertThrows(DataIntegrityViolationException.class, () -> this.repository.saveAndFlush(user));
+  }
+
   private User buildUser(String cpf, String email) {
     User user = new User();
 
