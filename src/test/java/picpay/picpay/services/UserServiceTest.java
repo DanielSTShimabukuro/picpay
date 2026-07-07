@@ -1,5 +1,7 @@
 package picpay.picpay.services;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import picpay.picpay.dtos.user.UserRegisterRequestDTO;
+import picpay.picpay.exceptions.BusinessException;
 import picpay.picpay.mappers.UserMapper;
 import picpay.picpay.models.user.User;
 import picpay.picpay.models.user.UserType;
@@ -35,13 +38,7 @@ public class UserServiceTest {
 
   @Test
   void shouldRegisterUserSuccessfully() throws Exception {
-    UserRegisterRequestDTO request = new UserRegisterRequestDTO("881.302.780-06", 
-                                                                "daniel.s.t.shimabukuro@gmail.com", 
-                                                                "Daniel", 
-                                                                "Shimabukuro", 
-                                                                "senha", 
-                                                                BigDecimal.valueOf(1000), 
-                                                                UserType.COMMON);
+    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO();
 
     User user = new User();
 
@@ -53,5 +50,23 @@ public class UserServiceTest {
     verify(this.validationService).validateRegister(request);
     verify(this.repository).save(user);
     verify(this.mapper).toResponse(user);
+  }
+
+  @Test
+  void shouldNotRegisterUserWhenCPFAlreadyExists() throws Exception {
+    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO();
+
+    doThrow(new BusinessException("Cpf is already used.")).when(this.validationService).validateRegister(request);
+    assertThrows(BusinessException.class, () -> this.service.registerUser(request));
+  }
+
+  private UserRegisterRequestDTO buildUserRegisterRequestDTO() {
+    return new UserRegisterRequestDTO("881.302.780-06", 
+                                      "daniel.s.t.shimabukuro@gmail.com", 
+                                      "Daniel", 
+                                      "Shimabukuro", 
+                                      "senha", 
+                                      BigDecimal.valueOf(1000), 
+                                      UserType.COMMON);
   }
 }
