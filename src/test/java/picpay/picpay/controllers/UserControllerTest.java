@@ -35,13 +35,7 @@ public class UserControllerTest {
 
   @Test
   void shouldRegisterUserSuccessfully() throws Exception {
-    UserRegisterRequestDTO request = new UserRegisterRequestDTO("881.302.780-06", 
-                                                                    "daniel.s.t.shimabukuro@gmail.com", 
-                                                                    "Daniel", 
-                                                                    "Shimabukuro", 
-                                                                    "senha", 
-                                                                    BigDecimal.valueOf(1000), 
-                                                                    UserType.COMMON);
+    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO();
     
     UserResponseDTO response = this.buildUserResponseDTO();
 
@@ -56,6 +50,16 @@ public class UserControllerTest {
             .andExpect(jsonPath("$.type").value(response.type().toString()));
 
     verify(this.service).registerUser(request);
+  }
+
+  private UserRegisterRequestDTO buildUserRegisterRequestDTO() {
+    return new UserRegisterRequestDTO("881.302.780-06", 
+                                      "daniel.s.t.shimabukuro@gmail.com", 
+                                      "Daniel", 
+                                      "Shimabukuro", 
+                                      "senha", 
+                                      BigDecimal.valueOf(1000), 
+                                      UserType.COMMON);
   }
 
   private UserResponseDTO buildUserResponseDTO() {
