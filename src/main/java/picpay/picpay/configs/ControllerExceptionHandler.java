@@ -35,7 +35,7 @@ public class ControllerExceptionHandler {
 
     ExceptionResponseDTO response = new ExceptionResponseDTO(
       status.value(),
-    List.of(ex.getMessage()),
+      List.of(ex.getMessage()),
       LocalDateTime.now());
 
     return ResponseEntity.status(status).body(response);

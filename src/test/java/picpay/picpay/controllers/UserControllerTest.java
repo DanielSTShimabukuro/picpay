@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,7 +36,7 @@ public class UserControllerTest {
 
   @Test
   void shouldRegisterUserSuccessfully() throws Exception {
-    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO();
+    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO("881.302.780-06");
     
     UserResponseDTO response = this.buildUserResponseDTO();
 
@@ -52,8 +53,19 @@ public class UserControllerTest {
     verify(this.service).registerUser(request);
   }
 
-  private UserRegisterRequestDTO buildUserRegisterRequestDTO() {
-    return new UserRegisterRequestDTO("881.302.780-06", 
+  @Test
+  void shouldReturnBadRequestWhenInvalidCPFInRegisterUser() throws Exception {
+    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO("1");
+
+    mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(jsonPath("$.message").value("cpf: invalid Brazilian individual taxpayer registry number (CPF)"))
+            .andExpect(jsonPath("$.timestamp").exists());
+  }
+
+  private UserRegisterRequestDTO buildUserRegisterRequestDTO(String cpf) {
+    return new UserRegisterRequestDTO(cpf, 
                                       "daniel.s.t.shimabukuro@gmail.com", 
                                       "Daniel", 
                                       "Shimabukuro", 
