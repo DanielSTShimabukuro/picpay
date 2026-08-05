@@ -1,8 +1,11 @@
 package picpay.picpay.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,7 +39,7 @@ public class UserControllerTest {
 
   @Test
   void shouldRegisterUserSuccessfully() throws Exception {
-    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO("881.302.780-06");
+    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO("881.302.780-06", "daniel.s.t.shimabukuro@gmail.com");
     
     UserResponseDTO response = this.buildUserResponseDTO();
 
@@ -44,29 +47,50 @@ public class UserControllerTest {
 
     mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(response.id()))
             .andExpect(jsonPath("$.firstName").value(response.firstName()))
             .andExpect(jsonPath("$.lastName").value(response.lastName()))
             .andExpect(jsonPath("$.balance").value(response.balance()))
-            .andExpect(jsonPath("$.type").value(response.type().toString()));
+            .andExpect(jsonPath("$.type").value(response.type().toString()))
+            .andExpect(jsonPath("$.cpf").doesNotExist())
+            .andExpect(jsonPath("$.email").doesNotExist())
+            .andExpect(jsonPath("$.password").doesNotExist());
 
     verify(this.service).registerUser(request);
   }
 
   @Test
   void shouldReturnBadRequestWhenInvalidCPFInRegisterUser() throws Exception {
-    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO("1");
+    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO("1", "daniel.s.t.shimabukuro@gmail.com");
 
     mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
             .andExpect(jsonPath("$.message").value("cpf: invalid Brazilian individual taxpayer registry number (CPF)"))
             .andExpect(jsonPath("$.timestamp").exists());
+
+    verify(service, never()).registerUser(any());
   }
 
-  private UserRegisterRequestDTO buildUserRegisterRequestDTO(String cpf) {
+  @Test
+  void shouldReturnBadRequestWhenInvalidEmailInRegisterUser() throws Exception {
+    UserRegisterRequestDTO request = this.buildUserRegisterRequestDTO("881.302.780-06", "email");
+
+    mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.status").value(HttpStatus.BAD_REQUEST.value()))
+            .andExpect(jsonPath("$.message").value("email: Email invalid."))
+            .andExpect(jsonPath("$.timestamp").exists());
+
+    verify(service, never()).registerUser(any());
+  }
+
+  private UserRegisterRequestDTO buildUserRegisterRequestDTO(String cpf, String email) {
     return new UserRegisterRequestDTO(cpf, 
-                                      "daniel.s.t.shimabukuro@gmail.com", 
+                                      email, 
                                       "Daniel", 
                                       "Shimabukuro", 
                                       "senha", 
