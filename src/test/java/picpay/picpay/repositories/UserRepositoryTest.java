@@ -2,6 +2,7 @@ package picpay.picpay.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 
@@ -16,7 +17,7 @@ import picpay.picpay.models.user.UserType;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class UserRepositoryTest {
+class UserRepositoryTest {
   @Autowired
   private UserRepository repository;
   
@@ -63,10 +64,15 @@ public class UserRepositoryTest {
     assertEquals(user, this.repository.findById(user.getId()).orElse(null));
   }
 
+  @Test
+  void shouldNotFindUserById() {
+    assertTrue(this.repository.findById("51c92414-92cb-419a-92ec-63e166ab6a76").isEmpty());
+  }
+
   private User buildUser(String cpf, String email) {
     User user = new User();
 
-    user.setCpf(cpf);
+    user.setCpf(cpf);   
     user.setEmail(email);
     user.setFirstName("Daniel");
     user.setLastName("Shimabukuro");
