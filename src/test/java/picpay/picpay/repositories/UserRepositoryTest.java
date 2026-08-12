@@ -1,5 +1,6 @@
 package picpay.picpay.repositories;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
@@ -21,8 +22,8 @@ public class UserRepositoryTest {
   
   @Test
   void shouldNotAllowDuplicateCPFInDatabase() {
-    User user1 = buildUser("881.302.780-06", "daniel.s.t.shimabukuro@gmail.com");
-    User user2 = buildUser("881.302.780-06", "danielsatoshi.shimabukuro@gmail.com");
+    User user1 = this.buildUser("881.302.780-06", "daniel.s.t.shimabukuro@gmail.com");
+    User user2 = this.buildUser("881.302.780-06", "danielsatoshi.shimabukuro@gmail.com");
 
     this.repository.saveAndFlush(user1);
 
@@ -31,8 +32,8 @@ public class UserRepositoryTest {
 
   @Test
   void shouldNotAllowDuplicateEmailInDatabase() {
-    User user1 = buildUser("881.302.780-06", "daniel.s.t.shimabukuro@gmail.com");
-    User user2 = buildUser("048.556.150-64", "daniel.s.t.shimabukuro@gmail.com");
+    User user1 = this.buildUser("881.302.780-06", "daniel.s.t.shimabukuro@gmail.com");
+    User user2 = this.buildUser("048.556.150-64", "daniel.s.t.shimabukuro@gmail.com");
 
     this.repository.saveAndFlush(user1);
 
@@ -41,16 +42,25 @@ public class UserRepositoryTest {
 
   @Test
   void shouldNotAllowNullCpfInDatabase() {
-    User user = buildUser(null, "daniel.s.t.shimabukuro@gmail.com");
+    User user = this.buildUser(null, "daniel.s.t.shimabukuro@gmail.com");
 
     assertThrows(DataIntegrityViolationException.class, () -> this.repository.saveAndFlush(user));
   }
 
   @Test
   void shouldNotAllowNullEmailInDatabase() {
-    User user = buildUser("881.302.780-06", null);
+    User user = this.buildUser("881.302.780-06", null);
 
     assertThrows(DataIntegrityViolationException.class, () -> this.repository.saveAndFlush(user));
+  }
+
+  @Test
+  void shouldFindUserByIdSuccessfully() {
+    User user = this.buildUser("881.302.780-06", "daniel.s.t.shimabukuro@gmail.com");
+
+    this.repository.saveAndFlush(user);
+
+    assertEquals(user, this.repository.findById(user.getId()).orElse(null));
   }
 
   private User buildUser(String cpf, String email) {
