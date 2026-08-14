@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,6 +64,17 @@ public class UserServiceTest {
     verify(this.mapper, never()).toEntity(request);
     verify(this.repository, never()).save(user);
     verify(this.mapper, never()).toResponse(user);
+  }
+
+  @Test
+  void shouldGetUserByIdSuccessfully() {
+    User user = new User();
+
+    when(this.repository.findById(user.getId())).thenReturn(Optional.of(user));
+    this.service.getUserById(user.getId());
+
+    verify(this.repository).findById(user.getId());
+    verify(this.mapper).toResponse(user);
   }
 
   private UserRegisterRequestDTO buildUserRegisterRequestDTO() {
